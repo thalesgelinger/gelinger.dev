@@ -258,7 +258,11 @@
                       shadow-lg hover:shadow-xl
                     "
                                     >
-                                        {app.icon}
+                                        {app.id === "settings"
+                                            ? theme === "dark"
+                                                ? "☀️"
+                                                : "🌙"
+                                            : app.icon}
                                     </button>
                                     <span
                                         class="text-white text-xs font-medium drop-shadow-sm mt-1 text-center"
@@ -267,18 +271,6 @@
                                     </span>
                                 </div>
                             {/each}
-                        </div>
-
-                        <!-- Theme Indicator -->
-                        <div class="mt-auto mb-8 text-center">
-                            <div
-                                class="inline-flex items-center gap-2 bg-black bg-opacity-20 rounded-full px-3 py-1"
-                            >
-                                <span class="text-white text-xs opacity-75">
-                                    {theme === "dark" ? "🌙" : "☀️"} Tokyo Night
-                                    {theme === "dark" ? "Dark" : "Light"}
-                                </span>
-                            </div>
                         </div>
                     {/if}
                 </div>
