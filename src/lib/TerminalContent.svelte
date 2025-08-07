@@ -38,7 +38,7 @@
                 typeInterval = undefined;
                 isTyping = false;
             }
-        }, 15);
+        }, 5);
     }
 
     // Watch for app changes without using $effect
