@@ -1,6 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
 @import "tailwindcss";
 
+:root {
+    --phone-bounce: phone 0.8s linear infinite;
+}
 
 /* Base styles */
 body {
@@ -38,4 +41,15 @@ body {
 ::selection {
   background: #7aa2f7;
   color: #1a1b26;
+}
+
+@keyframes phone {
+  0%, 100% {
+    transform: translateY(-1%);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: none;
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
 }

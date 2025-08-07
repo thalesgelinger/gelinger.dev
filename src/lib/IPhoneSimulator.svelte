@@ -120,11 +120,13 @@
 </script>
 
 {#if isInitialized}
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
     <div
         bind:this={phoneRef}
-        class="fixed z-50 select-none {isDragging
-            ? 'cursor-grabbing'
-            : 'cursor-grab'}"
+        class={`fixed z-50 select-none 
+            ${isDragging ? "cursor-grabbing" : "cursor-grab"}
+            ${!hasMovedPhone && !isDragging ? "animate-(--phone-bounce)" : "none"}
+        `}
         style="
       left: {position.x}px;
       top: {position.y}px;
@@ -134,10 +136,6 @@
       filter: {theme === 'dark'
             ? 'drop-shadow(0 15px 30px rgba(255, 255, 255, 0.08)) drop-shadow(0 5px 15px rgba(255, 255, 255, 0.05))'
             : 'drop-shadow(0 15px 30px rgba(0, 0, 0, 0.25)) drop-shadow(0 5px 15px rgba(0, 0, 0, 0.15))'};
-      opacity: {!hasMovedPhone && !isDragging ? 0.7 : 1};
-      animation: {!hasMovedPhone && !isDragging
-            ? 'pulse 2s ease-in-out infinite'
-            : 'none'};
     "
         on:mousedown={handleMouseDown}
     >
@@ -235,7 +233,7 @@
                                 </div>
                             </div>
 
-                            <div class="mt-8 animate-bounce">
+                            <div class="mt-8">
                                 <div
                                     class="w-8 h-8 border-2 border-white rounded-full flex items-center justify-center"
                                 >
