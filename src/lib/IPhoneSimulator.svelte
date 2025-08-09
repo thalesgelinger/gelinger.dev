@@ -1,19 +1,30 @@
 <script lang="ts">
-    import { onMount } from "svelte";
-    import type { AppType, Theme } from "./stores";
+    import { type AppType, phoneStore } from "./stores.svelte";
 
-    export let apps: AppType[];
-    export let currentApp: AppType;
-    export let onAppSelect: (app: AppType) => void;
-    export let hasMovedPhone: boolean;
-    export let onPhoneMoved: () => void;
-    export let theme: Theme;
-    export let toggleTheme: () => void;
+    let apps: AppType[] = $state([
+        {
+            id: "theme",
+            name: "Theme",
+            icon: "",
+            color: "bg-grey200",
+            action: () => {
+                console.log("BATATA");
 
-    let position = { x: 0, y: 0 };
-    let isDragging = false;
-    let isInitialized = false;
-    let phoneRef: HTMLDivElement;
+                document.documentElement.classList.toggle(
+                    "dark",
+                    // localStorage.theme === "dark" ||
+                    //     (!("theme" in localStorage) &&
+                    //         window.matchMedia("(prefers-color-scheme: dark)")
+                    //             .matches),
+                );
+            },
+        },
+    ]);
+
+    let position = $state({ x: 0, y: 0 });
+    let isDragging = $state(false);
+    let isInitialized = $state(false);
+    let phoneRef: HTMLDivElement | null = $state(null);
     let dragStartRef = { x: 0, y: 0 };
     let initialCenterRef = { x: 0, y: 0 };
     let animationFrameId: number;
@@ -24,17 +35,16 @@
         hour12: false,
     });
 
-    // Initialize position immediately to prevent glitching
-    onMount(() => {
+    $effect(() => {
         const initializePosition = () => {
             const windowWidth = window.innerWidth;
             const windowHeight = window.innerHeight;
-            const centerX = (windowWidth - 320) / 2; // 320px is phone width
-            const centerY = (windowHeight - 640) / 2; // 640px is phone height
+            const centerX = (windowWidth - 320) / 2;
+            const centerY = (windowHeight - 640) / 2;
 
             initialCenterRef = { x: centerX, y: centerY };
 
-            if (!hasMovedPhone) {
+            if (!phoneStore.moved) {
                 position = { x: centerX, y: centerY };
             }
             isInitialized = true;
@@ -72,13 +82,13 @@
             position = newPosition;
 
             // Check if phone has moved significantly (only once)
-            if (!hasMovedPhone) {
+            if (!phoneStore.moved) {
                 const distance = Math.sqrt(
                     Math.pow(newPosition.x - initialCenterRef.x, 2) +
                         Math.pow(newPosition.y - initialCenterRef.y, 2),
                 );
                 if (distance > 50) {
-                    onPhoneMoved();
+                    phoneStore.moved = true;
                 }
             }
         });
@@ -91,7 +101,7 @@
         }
     }
 
-    onMount(() => {
+    $effect(() => {
         document.addEventListener("mousemove", handleMouseMove, {
             passive: true,
         });
@@ -109,13 +119,7 @@
     function handleAppClick(app: AppType, e: MouseEvent) {
         e.stopPropagation();
 
-        // If it's the settings app, only toggle theme without changing content
-        if (app.id === "settings") {
-            toggleTheme();
-            // Don't call onAppSelect for settings - just toggle theme
-        } else {
-            onAppSelect(app);
-        }
+        app.action?.();
     }
 </script>
 
@@ -123,21 +127,18 @@
     <!-- svelte-ignore a11y_no_static_element_interactions -->
     <div
         bind:this={phoneRef}
-        class={`fixed z-50 select-none 
+        class={`z-50 select-none absolute
             ${isDragging ? "cursor-grabbing" : "cursor-grab"}
-            ${!hasMovedPhone && !isDragging ? "animate-(--phone-bounce)" : "none"}
-        `}
+            ${!phoneStore.moved && !isDragging ? "animate-(--phone-bounce)" : "none"}
+            ${isDragging ? "scale-[1.02] transition-none will-change-transform" : "scale-100 transition-transform duration-200 ease-in-out will-change-auto"}
+            filter:drop-shadow(0_15px_30px_rgba(0,0,0,0.25))_drop-shadow(0_5px_15px_rgba(0,0,0,0.15))
+            dark:filter:drop-shadow(0_15px_30px_rgba(255,255,255,0.08))_drop-shadow(0_5px_15px_rgba(255,255,255,0.05))
+          `}
         style="
-      left: {position.x}px;
-      top: {position.y}px;
-      transform: {isDragging ? 'scale(1.02)' : 'scale(1)'};
-      transition: {isDragging ? 'none' : 'transform 0.2s ease'};
-      will-change: {isDragging ? 'transform' : 'auto'};
-      filter: {theme === 'dark'
-            ? 'drop-shadow(0 15px 30px rgba(255, 255, 255, 0.08)) drop-shadow(0 5px 15px rgba(255, 255, 255, 0.05))'
-            : 'drop-shadow(0 15px 30px rgba(0, 0, 0, 0.25)) drop-shadow(0 5px 15px rgba(0, 0, 0, 0.15))'};
-    "
-        on:mousedown={handleMouseDown}
+    left: {position.x}px;
+    top: {position.y}px;
+  "
+        onmousedown={handleMouseDown}
     >
         <!-- iPhone Frame -->
         <div class="w-80 h-[640px] bg-black rounded-[3rem] p-2">
@@ -176,11 +177,10 @@
                     <div
                         class="inline-flex items-center gap-2 bg-black bg-opacity-60 rounded-full px-4 py-2 backdrop-blur-sm"
                     >
-                        <div
-                            class="w-3 h-3 rounded-full {currentApp.color}"
-                        ></div>
+                        <div class="w-3 h-3 rounded-full"></div>
                         <span class="text-white text-sm font-medium">
-                            {currentApp.name}
+                            <!-- {currentApp.name} -->
+                            CURRENT APP
                         </span>
                     </div>
                 </div>
@@ -196,7 +196,7 @@
 
                 <!-- Screen Content -->
                 <div class="relative z-10 p-6 pt-16 h-full flex flex-col">
-                    {#if !hasMovedPhone}
+                    {#if !phoneStore.moved}
                         <!-- Onboarding Screen -->
                         <div
                             class="flex-1 flex flex-col items-center justify-center text-center"
@@ -248,21 +248,15 @@
                             {#each apps as app (app.id)}
                                 <div class="flex flex-col items-center">
                                     <button
-                                        on:click={(e) => handleAppClick(app, e)}
+                                        onclick={(e) => handleAppClick(app, e)}
                                         class="
                       w-14 h-14 rounded-xl flex items-center justify-center text-2xl
                       transition-all duration-200 hover:scale-110 active:scale-95
-                      {app.color} {currentApp.id === app.id
-                                            ? 'ring-2 ring-white ring-opacity-50'
-                                            : ''}
-                      shadow-lg hover:shadow-xl
+                      shadow-lg hover:shadow-xl ring-2 ring-white ring-opacity-50
+                      {app.color} 
                     "
                                     >
-                                        {app.id === "settings"
-                                            ? theme === "dark"
-                                                ? "☀️"
-                                                : "🌙"
-                                            : app.icon}
+                                        {app.icon}
                                     </button>
                                     <span
                                         class="text-white text-xs font-medium drop-shadow-sm mt-1 text-center"

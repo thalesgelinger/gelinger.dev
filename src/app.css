@@ -1,6 +1,38 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
 @import 'tailwindcss';
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+    --color-bg: #d5d6db;
+    --color-text: #565a6e;
+    --color-accent: #34548a;
+    --color-secondary: #8839ef;
+    --color-border: #9ca0b0;
+    --color-card: #eff1f5;
+    --color-muted: #6c6f85;
+    --color-icon-left:#f7768e;
+    --color-icon-mid: #e0af68;
+    --color-icon-right: #9ece6a;
+}
+
+@layer theme {
+  :root, :host {
+    @variant dark {
+        --color-bg: #1a1b26;
+        --color-text: #c0caf5;
+        --color-accent: #7aa2f7;
+        --color-secondary: #bb9af7;
+        --color-border: #414868;
+        --color-card: #24283b;
+        --color-muted: #565f89;
+        --color-icon-left: #d20f39;
+        --color-icon-mid: #fe640b;
+        --color-icon-right: #40a02b;
+    }
+  }
+}
+
 :root {
     --phone-bounce: phone 0.8s linear infinite;
 }
