@@ -7,6 +7,15 @@ export type AppType = {
     action?: () => {}
 }
 
-export const phoneStore = $state({
-    moved: false
+type PhoneStore = {
+    moved: boolean
+    initialized: boolean,
+    page: "" | "blog"
+}
+
+export const phoneStore = $state<PhoneStore>({
+    moved: false,
+    initialized: false,
+    page: ""
 })
+

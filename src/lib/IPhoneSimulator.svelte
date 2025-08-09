@@ -10,20 +10,12 @@
             action: () => {
                 console.log("BATATA");
 
-                document.documentElement.classList.toggle(
-                    "dark",
-                    // localStorage.theme === "dark" ||
-                    //     (!("theme" in localStorage) &&
-                    //         window.matchMedia("(prefers-color-scheme: dark)")
-                    //             .matches),
-                );
+                document.documentElement.classList.toggle("dark");
             },
         },
     ]);
 
-    let position = $state({ x: 0, y: 0 });
     let isDragging = $state(false);
-    let isInitialized = $state(false);
     let phoneRef: HTMLDivElement | null = $state(null);
     let dragStartRef = { x: 0, y: 0 };
     let initialCenterRef = { x: 0, y: 0 };
@@ -45,12 +37,23 @@
             initialCenterRef = { x: centerX, y: centerY };
 
             if (!phoneStore.moved) {
-                position = { x: centerX, y: centerY };
+                phoneStore.position = { x: centerX, y: centerY };
             }
-            isInitialized = true;
+
+            if (phoneStore.page === "blog") {
+                phoneStore.moved = true;
+                phoneStore.position = {
+                    x: windowWidth - 320 - 50,
+                    y: centerY - 20,
+                };
+            }
+
+            phoneStore.initialized = true;
+
+            return { x: centerX, y: centerY };
         };
 
-        initializePosition();
+        initialCenterRef = initializePosition();
         window.addEventListener("resize", initializePosition);
         return () => window.removeEventListener("resize", initializePosition);
     });
@@ -59,8 +62,8 @@
         if (e.target === phoneRef || phoneRef?.contains(e.target as Node)) {
             isDragging = true;
             dragStartRef = {
-                x: e.clientX - position.x,
-                y: e.clientY - position.y,
+                x: e.clientX - phoneStore.position.x,
+                y: e.clientY - phoneStore.position.y,
             };
             e.preventDefault();
         }
@@ -79,7 +82,7 @@
                 y: e.clientY - dragStartRef.y,
             };
 
-            position = newPosition;
+            phoneStore.position = newPosition;
 
             // Check if phone has moved significantly (only once)
             if (!phoneStore.moved) {
@@ -123,7 +126,7 @@
     }
 </script>
 
-{#if isInitialized}
+{#if phoneStore.initialized}
     <!-- svelte-ignore a11y_no_static_element_interactions -->
     <div
         bind:this={phoneRef}
@@ -135,8 +138,8 @@
             dark:filter:drop-shadow(0_15px_30px_rgba(255,255,255,0.08))_drop-shadow(0_5px_15px_rgba(255,255,255,0.05))
           `}
         style="
-    left: {position.x}px;
-    top: {position.y}px;
+    left: {phoneStore.position.x}px;
+    top: {phoneStore.position.y}px;
   "
         onmousedown={handleMouseDown}
     >

@@ -2,10 +2,9 @@
     import "../app.css";
 
     import IPhoneSimulator from "$lib/IPhoneSimulator.svelte";
+    import { phoneStore } from "$lib/stores.svelte";
 
     let { children } = $props();
-
-    let hasMovedPhone = true;
 </script>
 
 <svelte:head>
@@ -26,9 +25,9 @@
     </div>
 
     <div
-        class="relative z-10 transition-all duration-500 ease-out {hasMovedPhone
+        class="relative z-10 transition-all duration-500 ease-out {phoneStore.moved
             ? 'pr-0 max-w-4xl mx-auto'
-            : 'flex items-center justify-center min-h-screen'}"
+            : 'border-2 flex items-center justify-center min-h-screen'}"
     >
         {@render children?.()}
     </div>
