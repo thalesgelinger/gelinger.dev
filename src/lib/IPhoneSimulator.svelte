@@ -1,5 +1,6 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
+    import AppButton from "./AppButton.svelte";
     import IPhoneFrame from "./IPhoneFrame.svelte";
     import { type AppType } from "./stores.svelte";
 
@@ -41,19 +42,11 @@
 
 <IPhoneFrame>
     {#each apps as app (app.slug)}
-        <div class="flex flex-col items-center">
-            <button
-                onclick={(e) => handleAppClick(app, e)}
-                class="w-14 h-14 rounded-xl flex items-center justify-center text-2xl transition-all duration-200 hover:scale-110 active:scale-95 shadow-lg hover:shadow-xl ring-2 ring-white ring-opacity-50"
-            >
-                {app.icon}
-            </button>
-            <span
-                class="text-white text-xs font-medium drop-shadow-sm mt-1 text-center"
-            >
-                {app.title}
-            </span>
-        </div>
+        <AppButton
+            title={app.title}
+            icon={app.icon}
+            onclick={(e) => handleAppClick(app, e)}
+        />
     {/each}
 </IPhoneFrame>
 
