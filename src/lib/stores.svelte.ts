@@ -5,6 +5,7 @@ export const AppMobile = z.object({
     description: z.string(),
     slug: z.string(),
     icon: z.string().optional(),
+    color: z.string().optional(),
     categories: z.array(z.string()).optional(),
     publised: z.string().optional(),
     type: z.enum(["post", "app"]).default("post")

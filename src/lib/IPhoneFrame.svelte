@@ -1,7 +1,7 @@
 <script lang="ts">
     import { phoneStore } from "./stores.svelte";
 
-    let { children } = $props();
+    let { title, color, children } = $props();
 
     let isDragging = $state(false);
     let phoneRef: HTMLDivElement | null = $state(null);
@@ -166,10 +166,12 @@
                     <div
                         class="inline-flex items-center gap-2 bg-black bg-opacity-60 rounded-full px-4 py-2 backdrop-blur-sm"
                     >
-                        <div class="w-3 h-3 rounded-full"></div>
+                        <div
+                            class="w-3 h-3 rounded-full"
+                            style="background-color: {color}"
+                        ></div>
                         <span class="text-white text-sm font-medium">
-                            <!-- {currentApp.name} -->
-                            CURRENT APP
+                            {title}
                         </span>
                     </div>
                 </div>

@@ -4,18 +4,20 @@
     type Props = {
         title: string;
         icon?: string;
+        color: string;
         onclick: MouseEventHandler<HTMLButtonElement> | null | undefined;
     };
 
-    let { title, icon, onclick }: Props = $props();
+    let { title, icon, color, onclick }: Props = $props();
 </script>
 
 <div class="flex flex-col items-center">
     <button
         {onclick}
-        class="w-14 h-14 rounded-xl flex items-center justify-center text-2xl transition-all duration-200 hover:scale-110 active:scale-95 shadow-lg hover:shadow-xl ring-2 ring-white ring-opacity-50"
+        class="w-14 h-14 rounded-xl flex items-center justify-center text-2xl transition-all duration-200 hover:scale-110 active:scale-95 shadow-lg hover:shadow-xl ring-2 ring-white ring-opacity-50 text-white"
+        style="background-color: {color};"
     >
-        {icon}
+        {@html icon}
     </button>
     <span
         class="text-white text-xs font-medium drop-shadow-sm mt-1 text-center"

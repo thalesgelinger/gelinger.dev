@@ -1,17 +1,40 @@
 <script lang="ts">
     import TerminalContent from "$lib/TerminalContent.svelte";
     import { phoneStore } from "$lib/stores.svelte";
-    import type { PageProps } from "./$types";
 
     let title = "home";
-
-    let { data }: PageProps = $props();
 </script>
 
 {#if phoneStore.moved}
     <div class="p-8">
         <TerminalContent {title}>
-            <p>Wonderful content</p>
+            <div class="flex gap-9">
+                <img
+                    src="/me.jpeg"
+                    alt="Thales Gelinger"
+                    class="rounded-full h-20"
+                />
+                <h2>Hey, i’m Thales Gelinger</h2>
+            </div>
+            <p>
+                I build cool stuff, write about it, and repeat, take a look in
+                my posts, you may find something interesting, i also do some
+                youtube videos sometimes
+            </p>
+            <iframe
+                height="405"
+                class="w-full"
+                src="https://www.youtube.com/embed/sHI-_jbSuZY"
+                title="I&#39;m tired of JS so i started a new mobile framework using lua and rust"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allowfullscreen
+            ></iframe>
+
+            <div class="flex w-full justify-end">
+                <img src="/tails-running.gif" alt="Tails" class="h-20" />
+            </div>
         </TerminalContent>
     </div>
 {:else}

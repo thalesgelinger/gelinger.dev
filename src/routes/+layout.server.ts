@@ -8,7 +8,9 @@ export const load: LayoutServerLoad = async () => {
 
     const posts = Object.entries(postsData).map(([s, p]) => AppMobile.parse({
         ...(p as any).metadata,
-        slug: s.split("/").at(-1)!.replace(".md", "")
+        slug: s.split("/").at(-1)!.replace(".md", ""),
+        color: "#90AA86",
+        icon: "📃"
     }))
 
 

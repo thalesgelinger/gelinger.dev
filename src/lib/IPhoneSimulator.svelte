@@ -13,15 +13,31 @@
     let apps = $state<Array<AppType>>([
         {
             type: "app",
+            slug: "home",
+            title: "Home",
+            description: "Home page",
+            icon: "🏠",
+            color: "#8ACDEA",
+        },
+        ...posts,
+        {
+            type: "app",
             slug: "theme",
             title: "Theme",
             description: "Switch dark and light theme",
+            color: "#dedede",
+            icon: "☀️",
         },
-        ...posts,
     ]);
+
+    let currentApp = $state(apps[0]);
 
     function handleAppClick(app: AppType, e: MouseEvent) {
         e.stopPropagation();
+
+        if (app.slug !== "theme") {
+            currentApp = app;
+        }
 
         switch (app.type) {
             case "post":
@@ -33,6 +49,9 @@
                         case "theme":
                             document.documentElement.classList.toggle("dark");
                             break;
+                        case "home":
+                            goto("/");
+                            break;
                     }
                 }
                 break;
@@ -40,24 +59,16 @@
     }
 </script>
 
-<IPhoneFrame>
+<IPhoneFrame
+    title={currentApp.type === "post" ? "Post" : currentApp.title}
+    color={currentApp.color ?? "#FFFFFF"}
+>
     {#each apps as app (app.slug)}
         <AppButton
             title={app.title}
             icon={app.icon}
+            color={app?.color ?? "#FFFFFF"}
             onclick={(e) => handleAppClick(app, e)}
         />
     {/each}
 </IPhoneFrame>
-
-<style>
-    @keyframes pulse {
-        0%,
-        100% {
-            opacity: 0.7;
-        }
-        50% {
-            opacity: 1;
-        }
-    }
-</style>
