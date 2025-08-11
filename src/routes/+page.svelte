@@ -1,8 +1,11 @@
-<script>
+<script lang="ts">
     import TerminalContent from "$lib/TerminalContent.svelte";
     import { phoneStore } from "$lib/stores.svelte";
+    import type { PageProps } from "./$types";
 
-    let title = "TITLE";
+    let title = "home";
+
+    let { data }: PageProps = $props();
 </script>
 
 {#if phoneStore.moved}

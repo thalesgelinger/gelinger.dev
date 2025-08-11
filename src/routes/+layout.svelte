@@ -4,7 +4,8 @@
     import IPhoneSimulator from "$lib/IPhoneSimulator.svelte";
     import { phoneStore } from "$lib/stores.svelte";
 
-    let { children } = $props();
+    let { children, data } = $props();
+    const posts = data.posts;
 </script>
 
 <svelte:head>
@@ -32,5 +33,5 @@
         {@render children?.()}
     </div>
 
-    <IPhoneSimulator />
+    <IPhoneSimulator {posts} />
 </div>

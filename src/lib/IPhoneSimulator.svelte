@@ -1,22 +1,29 @@
 <script lang="ts">
+    import { goto } from "$app/navigation";
     import { type AppType, phoneStore } from "./stores.svelte";
 
-    let apps: AppType[] = $state([
-        {
-            id: "theme",
-            name: "Theme",
-            icon: "",
-            color: "bg-grey200",
-            action: () => {
-                console.log("BATATA");
+    type Props = {
+        posts: Array<AppType>;
+    };
 
-                document.documentElement.classList.toggle("dark");
-            },
+    let { posts }: Props = $props();
+
+    let apps = $state<Array<AppType>>([
+        {
+            type: "app",
+            slug: "theme",
+            title: "Theme",
+            description: "Switch dark and light theme",
         },
+        ...posts,
     ]);
 
     let isDragging = $state(false);
     let phoneRef: HTMLDivElement | null = $state(null);
+    let position = $state({
+        x: 0,
+        y: 0,
+    });
     let dragStartRef = { x: 0, y: 0 };
     let initialCenterRef = { x: 0, y: 0 };
     let animationFrameId: number;
@@ -37,12 +44,12 @@
             initialCenterRef = { x: centerX, y: centerY };
 
             if (!phoneStore.moved) {
-                phoneStore.position = { x: centerX, y: centerY };
+                position = { x: centerX, y: centerY };
             }
 
             if (phoneStore.page === "blog") {
                 phoneStore.moved = true;
-                phoneStore.position = {
+                position = {
                     x: windowWidth - 320 - 50,
                     y: centerY - 20,
                 };
@@ -62,8 +69,8 @@
         if (e.target === phoneRef || phoneRef?.contains(e.target as Node)) {
             isDragging = true;
             dragStartRef = {
-                x: e.clientX - phoneStore.position.x,
-                y: e.clientY - phoneStore.position.y,
+                x: e.clientX - position.x,
+                y: e.clientY - position.y,
             };
             e.preventDefault();
         }
@@ -82,7 +89,7 @@
                 y: e.clientY - dragStartRef.y,
             };
 
-            phoneStore.position = newPosition;
+            position = newPosition;
 
             // Check if phone has moved significantly (only once)
             if (!phoneStore.moved) {
@@ -122,7 +129,20 @@
     function handleAppClick(app: AppType, e: MouseEvent) {
         e.stopPropagation();
 
-        app.action?.();
+        switch (app.type) {
+            case "post":
+                goto(`/blog/${app.slug}`);
+                break;
+            case "app":
+                {
+                    switch (app.slug) {
+                        case "theme":
+                            document.documentElement.classList.toggle("dark");
+                            break;
+                    }
+                }
+                break;
+        }
     }
 </script>
 
@@ -138,8 +158,8 @@
             dark:filter:drop-shadow(0_15px_30px_rgba(255,255,255,0.08))_drop-shadow(0_5px_15px_rgba(255,255,255,0.05))
           `}
         style="
-    left: {phoneStore.position.x}px;
-    top: {phoneStore.position.y}px;
+    left: {position.x}px;
+    top: {position.y}px;
   "
         onmousedown={handleMouseDown}
     >
@@ -248,23 +268,18 @@
                         <!-- Normal Home Screen -->
                         <!-- App Grid with Labels -->
                         <div class="grid grid-cols-4 gap-4">
-                            {#each apps as app (app.id)}
+                            {#each apps as app (app.slug)}
                                 <div class="flex flex-col items-center">
                                     <button
                                         onclick={(e) => handleAppClick(app, e)}
-                                        class="
-                      w-14 h-14 rounded-xl flex items-center justify-center text-2xl
-                      transition-all duration-200 hover:scale-110 active:scale-95
-                      shadow-lg hover:shadow-xl ring-2 ring-white ring-opacity-50
-                      {app.color} 
-                    "
+                                        class="w-14 h-14 rounded-xl flex items-center justify-center text-2xl transition-all duration-200 hover:scale-110 active:scale-95 shadow-lg hover:shadow-xl ring-2 ring-white ring-opacity-50"
                                     >
                                         {app.icon}
                                     </button>
                                     <span
                                         class="text-white text-xs font-medium drop-shadow-sm mt-1 text-center"
                                     >
-                                        {app.name}
+                                        {app.title}
                                     </span>
                                 </div>
                             {/each}
