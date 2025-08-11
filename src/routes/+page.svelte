@@ -3,12 +3,13 @@
     import { phoneStore } from "$lib/stores.svelte";
 
     let title = "TITLE";
-    let content = "WONRDERFULL CONTENT JUST BECAUSE";
 </script>
 
 {#if phoneStore.moved}
     <div class="p-8">
-        <TerminalContent {title} {content} />
+        <TerminalContent {title}>
+            <p>Wonderful content</p>
+        </TerminalContent>
     </div>
 {:else}
     <div class="text-center max-w-2xl mx-auto p-8">

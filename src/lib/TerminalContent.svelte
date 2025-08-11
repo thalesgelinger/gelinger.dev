@@ -1,12 +1,13 @@
 <script lang="ts">
-    import { onDestroy, onMount } from "svelte";
+    import { onDestroy, onMount, type Snippet } from "svelte";
+    import { render } from "svelte/server";
 
     interface Props {
         title: string;
-        content: string;
+        children: Snippet<[]>;
     }
 
-    let { title, content }: Props = $props();
+    let { title, children }: Props = $props();
 
     let displayText = $state("");
     let showCursor = $state(true);
@@ -14,29 +15,29 @@
     let typeInterval: number | undefined;
     let cursorInterval: number | undefined;
 
-    function startTypingEffect() {
-        displayText = "";
-        isTyping = true;
-        showCursor = true;
-        let index = 0;
-
-        if (typeInterval) {
-            clearInterval(typeInterval);
-        }
-
-        typeInterval = setInterval(() => {
-            if (index < content.length) {
-                displayText = content.slice(0, index + 1);
-                index++;
-            } else {
-                clearInterval(typeInterval!);
-                typeInterval = undefined;
-                isTyping = false;
-            }
-        }, 5);
-    }
+    // function startTypingEffect() {
+    //     displayText = "";
+    //     isTyping = true;
+    //     showCursor = true;
+    //     let index = 0;
+    //
+    //     if (typeInterval) {
+    //         clearInterval(typeInterval);
+    //     }
+    //
+    //     typeInterval = setInterval(() => {
+    //         if (index < content.length) {
+    //             displayText = content.slice(0, index + 1);
+    //             index++;
+    //         } else {
+    //             clearInterval(typeInterval!);
+    //             typeInterval = undefined;
+    //             isTyping = false;
+    //         }
+    //     }, 5);
+    // }
     onMount(() => {
-        startTypingEffect();
+        // startTypingEffect();
     });
 
     onDestroy(() => {
@@ -64,7 +65,10 @@
     </div>
 
     <div class="text-sm leading-relaxed">
-        {displayText}
+        <!-- {displayText} -->
+        <div class="prose prose-tokyo lg:prose-xl dark:prose-invert">
+            {@render children()}
+        </div>
         <span
             class="ml-1 inline-block w-2
                 {showCursor || isTyping ? '' : 'opacity-0'}
