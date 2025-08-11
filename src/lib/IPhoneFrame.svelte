@@ -161,7 +161,7 @@
 
                 <!-- Dynamic Island - Current App Indicator -->
                 <div
-                    class="absolute top-12 left-1/2 transform -translate-x-1/2 z-20"
+                    class="absolute top-12 left-1/2 transform -translate-x-1/2 z-10"
                 >
                     <div
                         class="inline-flex items-center gap-2 bg-black bg-opacity-60 rounded-full px-4 py-2 backdrop-blur-sm"
