@@ -19,14 +19,18 @@ type PhoneStore = {
     moved: boolean
     initialized: boolean,
     isMobile: boolean,
-    page: "" | "blog"
+    page: "" | "blog",
+    isSheetOpen: boolean,
+    sheetCommand: string
 }
 
 export const phoneStore = $state<PhoneStore>({
     moved: false,
     initialized: false,
     page: "",
-    isMobile: false
+    isMobile: false,
+    isSheetOpen: false,
+    sheetCommand: ""
 })
 
 

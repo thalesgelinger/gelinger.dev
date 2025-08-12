@@ -1,5 +1,6 @@
 <script lang="ts">
     import { type Snippet } from "svelte";
+    import { phoneStore } from "./stores.svelte";
 
     interface Props {
         title: string;
@@ -10,13 +11,20 @@
 
     let showCursor = $state(true);
     let isTyping = $state(false);
+
+    function closeSheet() {
+        phoneStore.sheetCommand = "close";
+    }
 </script>
 
 <div class="p-8 min-h-screen">
     <div class="mb-8">
         <div class="flex items-center gap-4 mb-4">
             <div class="flex gap-2">
-                <div class="w-3 h-3 rounded-full bg-icon-left"></div>
+                <div
+                    class="w-3 h-3 rounded-full bg-icon-left cursor-pointer"
+                    onclick={closeSheet}
+                ></div>
                 <div class="w-3 h-3 rounded-full bg-icon-mid"></div>
                 <div class="w-3 h-3 rounded-full bg-icon-right"></div>
             </div>
