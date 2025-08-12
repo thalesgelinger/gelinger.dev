@@ -9,7 +9,7 @@
 	let contentElement: HTMLElement;
 	let dragging = false;
 	let startY: number;
-	let height = tweened(100, { duration: 300, easing: quintOut });
+	let height = tweened(40, { duration: 300, easing: quintOut });
 	let isFullScreen = false;
 	let lastScrollTop = 0;
 
@@ -69,13 +69,13 @@
 	}
 
 	function openSheet() {
-		height.set(window.innerHeight - 20);
+		height.set(window.innerHeight - 100);
 		phoneStore.isSheetOpen = true;
 		isFullScreen = false;
 	}
 
 	function closeSheet() {
-		height.set(100);
+		height.set(40);
 		phoneStore.isSheetOpen = false;
 		isFullScreen = false;
 	}
