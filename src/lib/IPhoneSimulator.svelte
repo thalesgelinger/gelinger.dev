@@ -6,9 +6,10 @@
 
     type Props = {
         posts: Array<AppType>;
+        isMobile?: boolean;
     };
 
-    let { posts }: Props = $props();
+    let { posts, isMobile }: Props = $props();
 
     let apps = $state<Array<AppType>>([
         {
@@ -62,6 +63,7 @@
 <IPhoneFrame
     title={currentApp.type === "post" ? "Post" : currentApp.title}
     color={currentApp.color ?? "#FFFFFF"}
+    {isMobile}
 >
     {#each apps as app (app.slug)}
         <AppButton
