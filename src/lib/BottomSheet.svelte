@@ -98,13 +98,13 @@
 <div
 	bind:this={sheetElement}
 	class="fixed bottom-0 left-0 right-0 bg-bg-secondary rounded-t-2xl shadow-lg z-50"
-	style="height: {$height}px;"
+	style="height: {$height}px; overscroll-behavior-y: contain;"
 	on:touchstart={handleTouchStart}
 	on:touchmove={handleTouchMove}
 	on:touchend={handleTouchEnd}
 	on:mousedown={handleMouseDown}
 >
-	<div class="handle cursor-grab h-8 flex items-center justify-center">
+	<div class="handle cursor-grab h-8 flex items-center justify-center" style="touch-action: none;">
 		<div class="w-12 h-1.5 bg-gray-500 rounded-full" />
 	</div>
 	<div bind:this={contentElement} class="overflow-y-auto" style="height: calc(100% - 2rem);">
