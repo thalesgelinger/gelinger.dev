@@ -1,6 +1,5 @@
 <script lang="ts">
-    import { onDestroy, onMount, type Snippet } from "svelte";
-    import { render } from "svelte/server";
+    import { type Snippet } from "svelte";
 
     interface Props {
         title: string;
@@ -9,45 +8,8 @@
 
     let { title, children }: Props = $props();
 
-    let displayText = $state("");
     let showCursor = $state(true);
     let isTyping = $state(false);
-    let typeInterval: number | undefined;
-    let cursorInterval: number | undefined;
-
-    // function startTypingEffect() {
-    //     displayText = "";
-    //     isTyping = true;
-    //     showCursor = true;
-    //     let index = 0;
-    //
-    //     if (typeInterval) {
-    //         clearInterval(typeInterval);
-    //     }
-    //
-    //     typeInterval = setInterval(() => {
-    //         if (index < content.length) {
-    //             displayText = content.slice(0, index + 1);
-    //             index++;
-    //         } else {
-    //             clearInterval(typeInterval!);
-    //             typeInterval = undefined;
-    //             isTyping = false;
-    //         }
-    //     }, 5);
-    // }
-    onMount(() => {
-        // startTypingEffect();
-    });
-
-    onDestroy(() => {
-        if (typeInterval) {
-            clearInterval(typeInterval);
-        }
-        if (cursorInterval) {
-            clearInterval(cursorInterval);
-        }
-    });
 </script>
 
 <div class="p-8 min-h-screen">

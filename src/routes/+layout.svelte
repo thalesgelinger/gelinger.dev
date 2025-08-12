@@ -7,16 +7,12 @@
     let { children, data } = $props();
     const posts = data.posts;
 
-    let isMobile = $state(false);
-
     $effect(() => {
         const mq = window.matchMedia("(max-width: 768px)");
-        isMobile = mq.matches;
-        console.log({ isMobile });
+        phoneStore.isMobile = mq.matches;
 
-        // Optional: update if screen resizes
         mq.addEventListener("change", (e) => {
-            isMobile = e.matches;
+            phoneStore.isMobile = e.matches;
         });
     });
 </script>
@@ -29,7 +25,7 @@
     />
 </svelte:head>
 
-{#if !isMobile}
+{#if !phoneStore.isMobile}
     <div
         class="min-h-screen relative overflow-hidden transition-colors duration-500 bg-bg text-text"
     >
@@ -50,5 +46,6 @@
         <IPhoneSimulator {posts} />
     </div>
 {:else}
-    <IPhoneSimulator {isMobile} {posts} />
+    <IPhoneSimulator {posts} />
+    {@render children?.()}
 {/if}

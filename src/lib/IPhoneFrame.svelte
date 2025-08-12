@@ -6,10 +6,9 @@
         title: string;
         color: string;
         children: Snippet;
-        isMobile?: boolean;
     };
 
-    let { title, color, children, isMobile }: Props = $props();
+    let { title, color, children }: Props = $props();
 
     let isDragging = $state(false);
     let phoneRef: HTMLDivElement | null = $state(null);
@@ -28,8 +27,9 @@
     });
 
     $effect(() => {
-        if (isMobile) {
+        if (phoneStore.isMobile) {
             phoneStore.initialized = true;
+            phoneStore.moved = true;
             return;
         }
 
@@ -223,17 +223,22 @@
     </div>
 {/snippet}
 
-{#if !isMobile && phoneStore.initialized}
+{#if !phoneStore.isMobile && phoneStore.initialized}
     <!-- svelte-ignore a11y_no_static_element_interactions -->
     <div
         bind:this={phoneRef}
-        class={`z-50 select-none fixed
-            ${isDragging ? "cursor-grabbing" : "cursor-grab"}
-            ${!phoneStore.moved && !isDragging ? "animate-(--phone-bounce)" : "none"}
-            ${isDragging ? "scale-[1.02] transition-none will-change-transform" : "scale-100 transition-transform duration-200 ease-in-out will-change-auto"}
+        class="select-none
+            {phoneStore.isMobile ? 'z-0' : 'z-50 fixed'}
+            {isDragging ? 'cursor-grabbing' : 'cursor-grab'}
+            {!phoneStore.moved && !isDragging
+            ? 'animate-(--phone-bounce)'
+            : 'none'}
+            {isDragging
+            ? 'scale-[1.02] transition-none will-change-transform'
+            : 'scale-100 transition-transform duration-200 ease-in-out will-change-auto'}
             filter:drop-shadow(0_15px_30px_rgba(0,0,0,0.25))_drop-shadow(0_5px_15px_rgba(0,0,0,0.15))
             dark:filter:drop-shadow(0_15px_30px_rgba(255,255,255,0.08))_drop-shadow(0_5px_15px_rgba(255,255,255,0.05))
-          `}
+          "
         style="
     left: {position.x}px;
     top: {position.y}px;

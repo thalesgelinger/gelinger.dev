@@ -18,13 +18,15 @@ export type AppType = z.infer<typeof AppMobile>
 type PhoneStore = {
     moved: boolean
     initialized: boolean,
+    isMobile: boolean,
     page: "" | "blog"
 }
 
 export const phoneStore = $state<PhoneStore>({
     moved: false,
     initialized: false,
-    page: ""
+    page: "",
+    isMobile: false
 })
 
 

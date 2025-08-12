@@ -5,8 +5,12 @@
     let title = "home";
 </script>
 
-{#if phoneStore.moved}
-    <div class="p-8">
+{#if phoneStore.moved || phoneStore.isMobile}
+    <div
+        class="md:p-8 {phoneStore.isMobile
+            ? 'bg-bg text-text absolute top-8 z-50 rounded-t-2xl'
+            : ''}"
+    >
         <TerminalContent {title}>
             <div class="flex gap-9">
                 <img
