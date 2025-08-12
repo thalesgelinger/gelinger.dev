@@ -116,7 +116,7 @@
     <!-- svelte-ignore a11y_no_static_element_interactions -->
     <div
         bind:this={phoneRef}
-        class={`z-50 select-none absolute
+        class={`z-50 select-none fixed
             ${isDragging ? "cursor-grabbing" : "cursor-grab"}
             ${!phoneStore.moved && !isDragging ? "animate-(--phone-bounce)" : "none"}
             ${isDragging ? "scale-[1.02] transition-none will-change-transform" : "scale-100 transition-transform duration-200 ease-in-out will-change-auto"}
